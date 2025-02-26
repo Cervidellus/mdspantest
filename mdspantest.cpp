@@ -2,8 +2,8 @@
 #include <chrono>
 #include <iostream>
 #include <mdspan>
-#include <print>
 #include <random>
+#include <print>
 #include <vector>
 
 class ScopedTimer {
@@ -36,13 +36,15 @@ int main()
     std::mt19937 rng(randomDevice());
     std::uniform_real_distribution<double> distribution(0.0, 1.0);
 
-    const int reps = 1000;
+    const int reps = 10000;
 
+    //Vector of Vectors
+    std::cout << "Testing std::vector<std::vector<int>\n";
     {
-        ScopedTimer timer("Vector of Vectors");
+        ScopedTimer timer("Write Vector of Vectors");
         for (int a = 0; a < reps; a++)
         {
-            for (auto row : vectorvector)
+            for (auto& row : vectorvector)
             {
                 for (int i = 0; i < 500; i++)
                 {
@@ -50,10 +52,14 @@ int main()
                 }
             }
         }
+    }
+
+    {
+        ScopedTimer timer("Read Vector of Vectors");
         int count = 0;
         for (int a = 0; a < reps; a++)
         {
-            for (auto row : vectorvector)
+            for (auto& row : vectorvector)
             {
                 for (int i = 0; i < 500; i++)
                 {
@@ -64,8 +70,10 @@ int main()
         std::println("Count:{}", count);
     }
 
+    //std::mdspan
+    std::cout << "\nTesting std::mdspan.\n";
     {
-        ScopedTimer timer("std::mdspan");
+        ScopedTimer timer("write std::mdspan");
         for (int a = 0; a < reps; a++)
         {
             for (int i = 0; i < 500; i++)
@@ -76,6 +84,10 @@ int main()
                 }
             }
         }
+    }
+
+    {
+        ScopedTimer timer("read std::mdspan");
         int count = 0;
         for (int a = 0; a < reps; a++)
         {
@@ -89,9 +101,12 @@ int main()
         }
         std::println("Count:{}", count);
     }
+    
 
+    //std::vector
+    std::cout << "\nTesting std::vector.\n";
     {
-        ScopedTimer timer("std::vector");
+        ScopedTimer timer("write std::vector");
         for (int a = 0; a < reps; a++)
         {
             for (auto& cell : mdspanvector)
@@ -100,15 +115,20 @@ int main()
             }
         }
     }
-        int count = 0;
-    for (int a = 0; a < reps; a++)
+
     {
-        for (auto& cell : mdspanvector)
+        ScopedTimer timer("Read std::vector");
+        int count = 0;
+        for (int a = 0; a < reps; a++)
         {
-            if (cell == 1) count++;
+            for (auto& cell : mdspanvector)
+            {
+                if (cell == 1) count++;
+            }
         }
+        std::println("Count:{}", count);
     }
-    std::println("Count:{}", count);
+
     
 }
 
