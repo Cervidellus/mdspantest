@@ -2,6 +2,7 @@
 #include <chrono>
 #include <iostream>
 #include <mdspan>
+#include <print>
 #include <random>
 #include <vector>
 
@@ -49,6 +50,18 @@ int main()
                 }
             }
         }
+        int count = 0;
+        for (int a = 0; a < reps; a++)
+        {
+            for (auto row : vectorvector)
+            {
+                for (int i = 0; i < 500; i++)
+                {
+                    if (row[i] == 1) count++;
+                }
+            }
+        }
+        std::println("Count:{}", count);
     }
 
     {
@@ -63,6 +76,18 @@ int main()
                 }
             }
         }
+        int count = 0;
+        for (int a = 0; a < reps; a++)
+        {
+            for (int i = 0; i < 500; i++)
+            {
+                for (int j = 0; j < 500; j++)
+                {
+                    if (mySpan[std::array{ i,j }] == 1) count++;
+                }
+            }
+        }
+        std::println("Count:{}", count);
     }
 
     {
@@ -75,6 +100,15 @@ int main()
             }
         }
     }
+        int count = 0;
+    for (int a = 0; a < reps; a++)
+    {
+        for (auto& cell : mdspanvector)
+        {
+            if (cell == 1) count++;
+        }
+    }
+    std::println("Count:{}", count);
     
 }
 
